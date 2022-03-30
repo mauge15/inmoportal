@@ -11,6 +11,8 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use common\models\House;
+use yii\data\ActiveDataProvider;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
@@ -75,7 +77,16 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $dataProvider = new ActiveDataProvider([
+            'query' => House::find()->published(),
+            'pagination' => [
+                'pageSize' => 5
+             ]
+        ]);
+        
+        return $this->render('index',[
+            'dataProvider'=> $dataProvider
+        ]);
     }
 
     /**

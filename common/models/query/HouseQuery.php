@@ -31,4 +31,10 @@ class HouseQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
+
+    public function published()
+    {
+        //return $this->andWhere(['status'=> 1]);
+        return $this;
+    }
 }

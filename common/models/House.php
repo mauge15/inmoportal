@@ -3,13 +3,17 @@
 namespace common\models;
 
 use Yii;
-
+use yii\helpers\FileHelper;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\helpers\StringHelper;
 /**
  * This is the model class for table "{{%houses}}".
  *
  * @property int $id
  * @property string $name
  * @property string|null $description
+ * @property string|null $image
  * @property float|null $price
  * @property int $status
  * @property int|null $created_at
@@ -32,6 +36,11 @@ use Yii;
  */
 class House extends \yii\db\ActiveRecord
 {
+     /**
+     * @var \yii\web\UploadedFile
+     */
+    public $imageFile;
+
     /**
      * {@inheritdoc}
      */
@@ -39,6 +48,15 @@ class House extends \yii\db\ActiveRecord
     {
         return '{{%houses}}';
     }
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+            BlameableBehavior::class
+        ];
+    }
+
 
     /**
      * {@inheritdoc}
@@ -48,6 +66,8 @@ class House extends \yii\db\ActiveRecord
         return [
             [['name', 'status', 'type'], 'required'],
             [['description'], 'string'],
+            [['imageFile'], 'image', 'extensions' => 'png, jpg, jpeg, webp', 'maxSize' => 10 * 1024 * 1024],
+            [['image'], 'string', 'max' => 2000],
             [['price', 'surface', 'latitude', 'longitude'], 'number'],
             [['status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'type', 'bedrooms', 'bathrooms', 'floor', 'has_garage'], 'integer'],
             [['name', 'address', 'location'], 'string', 'max' => 255],
@@ -63,22 +83,24 @@ class House extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'description' => 'Description',
-            'price' => 'Price',
-            'status' => 'Status',
+            'name' => 'Nombre',
+            'description' => 'Descripción',
+            'price' => 'Precio',
+            'image' => 'Fotos',
+            'imageFile' => 'Fotos',
+            'status' => 'Activo',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
             'type' => 'Type',
-            'surface' => 'Surface',
-            'bedrooms' => 'Bedrooms',
-            'bathrooms' => 'Bathrooms',
+            'surface' => 'Superficie',
+            'bedrooms' => 'Habitaciones',
+            'bathrooms' => 'Baños',
             'floor' => 'Floor',
-            'has_garage' => 'Has Garage',
-            'address' => 'Address',
-            'location' => 'Location',
+            'has_garage' => 'Tiene Garaje',
+            'address' => 'Dirección',
+            'location' => 'Ubicación',
             'latitude' => 'Latitude',
             'longitude' => 'Longitude',
         ];
@@ -111,5 +133,50 @@ class House extends \yii\db\ActiveRecord
     public static function find()
     {
         return new \common\models\query\HouseQuery(get_called_class());
+    }
+
+    public function save($runValidation = true, $attributeNames = null)
+    {
+       
+        if ($this->imageFile){
+            $this->image = '/houses/'.Yii::$app->security->generateRandomString(255).'/'.$this->imageFile->name;
+        }
+       /*echo '<pre>';
+        var_dump($this->image);
+        echo '</pre>';
+        exit;*/
+        $transaction = Yii::$app->db->beginTransaction();
+        $ok =  parent::save($runValidation,$attributeNames);
+
+        if ($ok)
+        {
+            $fullPath =  Yii::getAlias('@frontend/web/storage'.$this->image);
+            $dir = dirname($fullPath);
+            if (!FileHelper::createDirectory($dir) | !$this->imageFile->saveAs($fullPath)){
+                $transaction->rollBack();
+                return false;
+ 
+            }
+            /*echo "<pre>";
+            var_dump( $dir);
+            echo '</pre>';
+            exit;*/
+        }
+        $transaction->commit();
+        return $ok;
+
+    }
+
+    public function getImageUrl(){
+        if ($this->image)
+        {
+        return Yii::$app->params['frontendUrl'].'/storage/'.$this->image;
+        }
+        return Yii::$app->params['frontendUrl'].'/img/nophoto.webp';
+    }
+
+    public function getShortDescription()
+    {
+        return StringHelper::truncateWords($this->description, 30);
     }
 }
