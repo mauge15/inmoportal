@@ -88,21 +88,21 @@ class House extends \yii\db\ActiveRecord
             'price' => 'Precio',
             'image' => 'Fotos',
             'imageFile' => 'Fotos',
-            'status' => 'Activo',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
-            'type' => 'Type',
+            'status' => 'Publicado',
+            'created_at' => 'Fecha creación',
+            'updated_at' => 'Fecha actualización',
+            'created_by' => 'Creado por',
+            'updated_by' => 'Actualizado por',
+            'type' => 'Tipo',
             'surface' => 'Superficie',
             'bedrooms' => 'Habitaciones',
             'bathrooms' => 'Baños',
-            'floor' => 'Floor',
+            'floor' => 'Planta',
             'has_garage' => 'Tiene Garaje',
             'address' => 'Dirección',
             'location' => 'Ubicación',
-            'latitude' => 'Latitude',
-            'longitude' => 'Longitude',
+            'latitude' => 'Latitud',
+            'longitude' => 'Longitud',
         ];
     }
 
@@ -141,28 +141,36 @@ class House extends \yii\db\ActiveRecord
         if ($this->imageFile){
             $this->image = '/houses/'.Yii::$app->security->generateRandomString(255).'/'.$this->imageFile->name;
         }
-       /*echo '<pre>';
+     
+        $transaction = Yii::$app->db->beginTransaction();
+        
+        $ok =  parent::save($runValidation,$attributeNames);
+        /*echo '<pre>';
         var_dump($this->image);
         echo '</pre>';
         exit;*/
-        $transaction = Yii::$app->db->beginTransaction();
-        $ok =  parent::save($runValidation,$attributeNames);
-
+        
         if ($ok)
         {
             $fullPath =  Yii::getAlias('@frontend/web/storage'.$this->image);
             $dir = dirname($fullPath);
+
+           /* echo "<pre>";
+            var_dump($fullPath);
+            echo '</pre>';
+            exit;
+*/
             if (!FileHelper::createDirectory($dir) | !$this->imageFile->saveAs($fullPath)){
                 $transaction->rollBack();
                 return false;
- 
             }
+
             /*echo "<pre>";
             var_dump( $dir);
             echo '</pre>';
             exit;*/
+             $transaction->commit();
         }
-        $transaction->commit();
         return $ok;
 
     }
@@ -170,7 +178,7 @@ class House extends \yii\db\ActiveRecord
     public function getImageUrl(){
         if ($this->image)
         {
-        return Yii::$app->params['frontendUrl'].'/storage/'.$this->image;
+        return Yii::$app->params['frontendUrl'].'/storage'.$this->image;
         }
         return Yii::$app->params['frontendUrl'].'/img/nophoto.webp';
     }
