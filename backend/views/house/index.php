@@ -41,7 +41,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             
             'price:currency',
-            'status',
+            [
+                'attribute'=>'status',
+                'content'=>function($model){
+                    /** @var \common\models\House $model */
+                    return Html::tag('span',$model->status ? 'Publicado'  : 'Borrador',[
+                        'class'=> $model->status ? 'badge badge-success' : 'badge badge-danger'
+                    ]);
+                }
+            ],
             [
                 'attribute'=>'created_at',
                 'format' => ['datetime'],
