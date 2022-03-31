@@ -10,7 +10,7 @@ $this->title = 'My Yii Application';
    
 
     <div class="body-content">
-
+<div class="container">
         <div class="row">
             <?php echo \yii\widgets\ListView ::widget([
                 'dataProvider' => $dataProvider,
@@ -28,6 +28,6 @@ $this->title = 'My Yii Application';
             ])?>
                    
         </div>
-
+                </div>
     </div>
 </div>
