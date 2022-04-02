@@ -3,6 +3,7 @@
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
+use yii\bootstrap4\Dropdown;
 
 $this->title = 'My Yii Application';
 ?>
@@ -11,47 +12,46 @@ $this->title = 'My Yii Application';
 <header class="masthead">
             <div class="container position-relative">
                 <div class="row justify-content-center">
-                    <div class="col-xl-6">
+                    <div class="col-xl-12">
                         <div class="text-center text-white">
                             <!-- Page heading-->
                             <h1 class="mb-5">Busca tu nueva casa en segundos!</h1>
-                            <!-- Signup form-->
-                            <!-- * * * * * * * * * * * * * * *-->
-                            <!-- * * SB Forms Contact Form * *-->
-                            <!-- * * * * * * * * * * * * * * *-->
-                            <!-- This form is pre-integrated with SB Forms.-->
-                            <!-- To make this form functional, sign up at-->
-                            <!-- https://startbootstrap.com/solution/contact-forms-->
-                            <!-- to get an API token!-->
-                            <!--<form class="form-subscribe" id="contactForm" action="">-->
+                       
+                            
+                                <?= \yii\helpers\Html::beginForm(['house/index'], 'post',['class'=>'form-subscribe']) ?>
+                            <div class="row">
+                                <div class="col-sm">
+                                
+                                <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked>
+                                <label class="btn btn-outline-secondary" for="option1">Comprar</label>
 
-                            <?= \yii\helpers\Html::beginForm(['house/index'], 'post',['class'=>'form-subscribe']) ?>
-                                <!-- Email address input-->
-                                <div class="row">
-                                    <div class="col">
-                                        <input class="form-control form-control-lg" id="emailAddress" type="email" placeholder="Sucre-ciudad" data-sb-validations="required,email" />
-                                        <div class="invalid-feedback text-white" data-sb-feedback="emailAddress:required">Email Address is required.</div>
-                                        <div class="invalid-feedback text-white" data-sb-feedback="emailAddress:email">Email Address Email is not valid.</div>
-                                    </div>
-                                    <div class="col-auto"><button class="btn btn-primary btn-lg" id="submitButton" type="submit">Buscar</button></div>
+                                <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
+                                <label class="btn btn-outline-secondary" for="option2">Alquiler</label>
+
+                                <input type="radio" class="btn-check" name="options" id="option3" autocomplete="off">
+                                <label class="btn btn-outline-secondary" for="option3">Anticrético</label>
+
                                 </div>
-                                <!-- Submit success message-->
-                                <!---->
-                                <!-- This is what your users will see when the form-->
-                                <!-- has successfully submitted-->
-                                <div class="d-none" id="submitSuccessMessage">
-                                    <div class="text-center mb-3">
-                                        <div class="fw-bolder">Form submission successful!</div>
-                                        <p>To activate this form, sign up at</p>
-                                        <a class="text-white" href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
-                                    </div>
+                                <div class="col-sm">   
+                                    <select class="form-select" aria-label="Default select example">
+                                    <option selected>Tipo..</option>
+                                    <option value="1">Vivienda</option>
+                                    <option value="2">Terreno</option>
+                                    </select>
                                 </div>
-                                <!-- Submit error message-->
-                                <!---->
-                                <!-- This is what your users will see when there is-->
-                                <!-- an error submitting the form-->
-                                <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
+
+                                <div class="col-sm"> <div class="mb-3 mt-1">
+                                        <input class="form-control" type="text" placeholder="Sucre-Ciudad" />
+                                        </div>
+                                </div>
+
+                                <div class="col-sm">
+                                    <button type="submit" class="btn btn-primary btn-block">Buscar</button>
+                                </div>
+
+                            </div>
                                 <?= \yii\helpers\Html::endForm() ?>
+                            
                         </div>
                     </div>
                 </div>

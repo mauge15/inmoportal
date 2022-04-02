@@ -3004,7 +3004,7 @@ textarea.form-control-lg {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  background-color: transparent;
+  background-color: #d7dfe6;
   border: 1px solid transparent;
   padding: 0.75rem 1rem;
   font-size: 1rem;
@@ -3294,7 +3294,7 @@ textarea.form-control-lg {
 }
 
 .btn-outline-secondary {
-  color: #6c757d;
+  color: #131516;
   border-color: #6c757d;
 }
 .btn-outline-secondary:hover {
