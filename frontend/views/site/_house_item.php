@@ -23,7 +23,8 @@
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Detalle</a></div>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" 
+                                href="<?php echo \yii\helpers\Url::toRoute(['view','id'=>$model->id])?>">Detalle</a></div>
                             </div>
                         </div>
                 
