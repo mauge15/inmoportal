@@ -267,4 +267,21 @@ class SiteController extends Controller
             'model' => $model
         ]);
     }
+
+
+    /**
+     * Displays detail of an add.
+     *
+     * @return mixed
+     */
+    public function actionView($id)
+    {
+        if (($model = House::findOne(['id' => $id])) !== null) {
+            return $this->render('/house/view',[
+                'model'=> $model
+            ]);
+        }
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
 }
